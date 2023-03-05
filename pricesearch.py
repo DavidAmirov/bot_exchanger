@@ -31,6 +31,4 @@ def price_search(cur):
         info.append(sell_price)
         info.append(time.replace("\n",""))
     get_best_price(cur)
-    print(info)
-
-price_search('usd')
+    return info
