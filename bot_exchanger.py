@@ -6,8 +6,9 @@ import os
 
 from dotenv import load_dotenv
 
-from keyboards import kb_client
+from client_messages import START_MESSAGE
 from pricesearch import price_search
+from keyboards import ikb
 
 TELEGRAM_TOKEN = os.getenv('TELEGRAM_TOKEN')
 
@@ -17,21 +18,13 @@ bot = Bot(token=os.getenv('TELEGRAM_TOKEN'))
 dp = Dispatcher(bot)
 
 @dp.message_handler(commands=['start'])
-async def command_start(message : types.Message):
-    mes = (f'Здравсуйте, {message.from_user.first_name}. '
-           f'Я помогу вам обменять валюту по лучшим ценнам в вашем городе. '
-           f'Какую валюту вы хочете обменять?')
-    await bot.send_message(message.from_user.id, mes, reply_markup=kb_client)
+async def cmd_start(message: types.Message):
+    await message.answer(text=START_MESSAGE, reply_markup= ikb)
 
-@dp.message_handler()
-async def asnwer(message : types.Message):
-    currency = message.text
-    if currency =='Доллары':
-        answer = price_search('usd')
-    elif currency =='Евро':
-        answer = price_search('eur')
-    await message.answer(answer)
-
-
+@dp.callback_query_handler()
+async def cl_answer(callback: types.CallbackQuery):
+    data = callback.data
+    answer = price_search(data)
+    await callback.message.answer(text=answer, reply_markup= ikb)
 
 executor.start_polling(dp, skip_updates=True)

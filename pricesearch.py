@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+from client_messages import ANSWER_MESSAGE
 headers = {
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36"
     }
@@ -31,4 +32,4 @@ def price_search(cur):
         info.append(sell_price)
         info.append(time.replace("\n",""))
     get_best_price(cur)
-    return info
+    return ANSWER_MESSAGE.format(info[0], info[3], info[4], info[1], info[2], info[5])
